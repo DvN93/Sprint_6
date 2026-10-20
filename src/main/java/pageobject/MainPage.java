@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -16,14 +17,8 @@ public class MainPage {
     private static final String QUESTION_ID = "accordion__heading-%d";
     private static final String ANSWER_ID = "accordion__panel-%d";
 
-    // Логотип Яндекса
-    private By yandexLogo = By.className("Header_LogoYandex__3TSOI");
-    // Логотип Самокат
-    private By samokatLogo = By.className("Header_LogoScooter__3lsAR");
     // Кнопка "Заказать" вверху страницы
     private By orderButtonTop = By.xpath(".//button[@class = 'Button_Button__ra12g']");
-     // Кнопка "Статус заказа"
-    private By orderStatusButton = By.className("Header_Link__1TAG7");
      // Кнопка "Заказать" внизу страницы
     private By orderButtonBottom = By.xpath("//button[contains(@class,'Button_UltraBig__UU3Lp')]");
 
@@ -68,8 +63,10 @@ public class MainPage {
 
     public void clickQuestion(int index) {
         WebElement question = driver.findElement(By.id(String.format(QUESTION_ID, index)));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", question);
-        question.click();
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView({block: 'center'});", question);
+        int offset = -(question.getSize().getWidth() / 2) + 20;
+        new Actions(driver).moveToElement(question, offset, 0).click().perform();
     }
 
     public String getAnswerText(int index) {
@@ -79,25 +76,15 @@ public class MainPage {
         return driver.findElement(answer).getText();
     }
 
-    public void clickYandexLogo() {
-        driver.findElement(yandexLogo).click();
-    }
-
-    public void clickSamokatLogo() {
-        driver.findElement(samokatLogo).click();
-    }
-
     public void clickOrderButtonTop() {
         driver.findElement(orderButtonTop).click();
     }
 
-    public void clickOrderStatusButton() {
-        driver.findElement(orderStatusButton).click();
-    }
-
     public void clickOrderButtonBottom() {
-        WebElement button = driver.findElement(orderButtonBottom);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", button);
+        WebElement button = new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.presenceOfElementLocated(orderButtonBottom));
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView({block: 'center'});", button);
         button.click();
     }
 

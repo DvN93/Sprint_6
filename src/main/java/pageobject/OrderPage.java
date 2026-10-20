@@ -52,8 +52,6 @@ public class OrderPage {
     private By confirmOrderButton = By.xpath("//button[text()='Да']");
     // Окно успешного заказа
     private By successOrderWindow = By.xpath("//div[contains(text(),'Заказ оформлен')]");
-    // Кнопка Посмотреть статус
-    private By checkStatus = By.xpath("//button[text()='Посмотреть статус']");
 
     public OrderPage(WebDriver driver) {
         this.driver = driver;
@@ -72,7 +70,7 @@ public class OrderPage {
         driver.findElement(phoneInput).sendKeys(phone);
     }
 
-    public void selectMetroStation(String station){
+    private void selectMetroStation(String station){
         driver.findElement(metroInput).click();
         driver.findElement(metroInput).sendKeys(station);
         By option = By.xpath(String.format(METRO_OPTION, station));
